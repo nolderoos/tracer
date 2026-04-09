@@ -1,0 +1,573 @@
+/* ── Theme variables ── */
+:root,
+[data-theme='light'] {
+  --app-bg: #ffffff;
+  --sidebar-bg: #f8f9fa;
+  --toolbar-bg: #ffffff;
+  --border: #e5e7eb;
+  --text: #374151;
+  --text-muted: #6b7280;
+  --text-heading: #111827;
+  --node-bg: #ffffff;
+  --node-border: #e5e7eb;
+  --node-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --node-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --node-selected-ring: rgba(99, 102, 241, 0.5);
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --btn-bg: #f3f4f6;
+  --btn-hover: #e5e7eb;
+  --flag-bg: #fef2f2;
+  --flag-border: #fecaca;
+  --annotation-bg: rgba(255, 255, 255, 0.6);
+  --annotation-border: #d1d5db;
+  --delete-bg: #fef2f2;
+  --delete-hover: #fee2e2;
+  --delete-text: #dc2626;
+  --canvas-bg: #fafafa;
+}
+
+[data-theme='dark'] {
+  --app-bg: #0f1117;
+  --sidebar-bg: #161821;
+  --toolbar-bg: #161821;
+  --border: #2d2f3a;
+  --text: #9ca3af;
+  --text-muted: #6b7280;
+  --text-heading: #f3f4f6;
+  --node-bg: #1e2029;
+  --node-border: #2d2f3a;
+  --node-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --node-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --node-selected-ring: rgba(129, 140, 248, 0.5);
+  --input-bg: #1e2029;
+  --input-border: #374151;
+  --btn-bg: #1e2029;
+  --btn-hover: #2d2f3a;
+  --flag-bg: rgba(220, 38, 38, 0.08);
+  --flag-border: rgba(220, 38, 38, 0.25);
+  --annotation-bg: rgba(30, 32, 41, 0.6);
+  --annotation-border: #374151;
+  --delete-bg: rgba(220, 38, 38, 0.08);
+  --delete-hover: rgba(220, 38, 38, 0.15);
+  --delete-text: #f87171;
+  --canvas-bg: #0f1117;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  max-width: none;
+  border: none;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+/* ── Layout ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Toolbar ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.toolbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-heading);
+  letter-spacing: -0.3px;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.toolbar-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background: var(--btn-hover);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 2px;
+}
+
+.icon-btn {
+  width: 34px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 280px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+  transition: width 0.2s ease;
+  overflow-y: auto;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  border-right: none;
+  overflow: hidden;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 12px;
+  right: -28px;
+  width: 24px;
+  height: 24px;
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  z-index: 5;
+}
+
+.sidebar-toggle:hover {
+  background: var(--btn-hover);
+}
+
+.sidebar-content {
+  padding: 16px;
+}
+
+.sidebar-section {
+  margin-bottom: 24px;
+}
+
+.sidebar-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+}
+
+.sidebar-add-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.add-btn:hover {
+  background: var(--btn-hover);
+}
+
+.add-btn-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+.sidebar-label:first-of-type {
+  margin-top: 0;
+}
+
+.sidebar-input,
+.sidebar-select,
+.sidebar-textarea {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text-heading);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.sidebar-input:focus,
+.sidebar-select:focus,
+.sidebar-textarea:focus {
+  border-color: #6366f1;
+}
+
+.sidebar-textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+.sidebar-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-select-wrapper .sidebar-select {
+  flex: 1;
+}
+
+.sidebar-category-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebar-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.delete-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--delete-text);
+  background: var(--delete-bg);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.delete-btn:hover {
+  background: var(--delete-hover);
+}
+
+/* ── Canvas ── */
+.canvas {
+  flex: 1;
+  background: var(--canvas-bg);
+}
+
+/* React Flow overrides */
+.react-flow__background {
+  background: var(--canvas-bg) !important;
+}
+
+.react-flow__minimap {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.react-flow__controls {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--node-shadow);
+}
+
+.react-flow__controls-button {
+  background: var(--node-bg) !important;
+  border-bottom-color: var(--border) !important;
+  fill: var(--text) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--btn-hover) !important;
+}
+
+.react-flow__edge-textbg {
+  fill: var(--node-bg) !important;
+}
+
+.react-flow__edge-text {
+  fill: var(--text) !important;
+  font-size: 12px;
+}
+
+/* ── Step Node ── */
+.step-node {
+  min-width: 200px;
+  max-width: 260px;
+  padding: 12px 14px;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-radius: 8px;
+  box-shadow: var(--node-shadow);
+  transition: box-shadow 0.2s;
+  cursor: grab;
+}
+
+.step-node:hover {
+  box-shadow: var(--node-shadow-hover);
+}
+
+.step-node.selected {
+  box-shadow: 0 0 0 2px var(--node-selected-ring);
+}
+
+.step-node-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  line-height: 1.3;
+}
+
+.step-node-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* ── Decision Node ── */
+.decision-node-wrapper {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.decision-node-wrapper.selected .decision-node {
+  box-shadow: 0 0 0 2px var(--node-selected-ring);
+}
+
+.decision-node {
+  width: 80px;
+  height: 80px;
+  transform: rotate(45deg);
+  background: var(--node-bg);
+  border: 2px solid #6366f1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--node-shadow);
+  transition: box-shadow 0.2s;
+  cursor: grab;
+  pointer-events: none;
+}
+
+.decision-node:hover {
+  box-shadow: var(--node-shadow-hover);
+}
+
+.decision-node-wrapper {
+  pointer-events: all;
+}
+
+.decision-node-inner {
+  transform: rotate(-45deg);
+  text-align: center;
+}
+
+.decision-node-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-heading);
+  white-space: nowrap;
+}
+
+/* Decision handles positioned at diamond visual points */
+.decision-handle-top,
+.decision-handle-left,
+.decision-handle-right,
+.decision-handle-bottom {
+  z-index: 10;
+  pointer-events: all;
+}
+
+.decision-handle-top {
+  top: 0 !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.decision-handle-left {
+  left: 0 !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.decision-handle-right {
+  right: 0 !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translate(50%, -50%) !important;
+}
+
+.decision-handle-bottom {
+  bottom: 0 !important;
+  top: auto !important;
+  left: 50% !important;
+  transform: translate(-50%, 50%) !important;
+}
+
+/* ── Flag Node ── */
+.flag-node {
+  min-width: 180px;
+  max-width: 240px;
+  padding: 10px 12px;
+  background: var(--flag-bg);
+  border: 1px solid var(--flag-border);
+  border-radius: 8px;
+  box-shadow: var(--node-shadow);
+  transition: box-shadow 0.2s;
+  cursor: grab;
+}
+
+.flag-node:hover {
+  box-shadow: var(--node-shadow-hover);
+}
+
+.flag-node.selected {
+  box-shadow: 0 0 0 2px rgba(226, 75, 74, 0.4);
+}
+
+.flag-node-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flag-node-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.flag-node-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-heading);
+  line-height: 1.3;
+}
+
+.flag-node-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── Annotation Node ── */
+.annotation-node {
+  max-width: 200px;
+  padding: 8px 10px;
+  background: var(--annotation-bg);
+  border: 1px dashed var(--annotation-border);
+  border-radius: 6px;
+}
+
+.annotation-node-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.annotation-node-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* ── Handles ── */
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background: #6366f1;
+  border: 2px solid var(--node-bg);
+}
+
+.react-flow__handle:hover {
+  width: 10px;
+  height: 10px;
+}
