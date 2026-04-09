@@ -6,6 +6,7 @@ import Toolbar from './components/Toolbar';
 import { defaultNodes, defaultEdges } from './data/defaultFlow';
 import { loadFlow, clearFlow, useAutoSave } from './hooks/useFlowPersistence';
 import { useHistory } from './hooks/useHistory';
+import { useAuth } from './components/AuthProvider';
 import { generateId, exportFlow } from './utils/helpers';
 import './App.css';
 
@@ -24,6 +25,7 @@ function FlowApp() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
+  const { user, signOut } = useAuth();
   const { getViewport, setViewport, screenToFlowPosition } = useReactFlow();
   const debouncedSave = useAutoSave();
 
@@ -174,6 +176,8 @@ function FlowApp() {
         canRedo={canRedo()}
         darkMode={darkMode}
         onToggleDark={() => setDarkMode((d) => !d)}
+        user={user}
+        onSignOut={signOut}
       />
       <div className="app-body">
         <Sidebar

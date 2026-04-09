@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { importFlow } from '../utils/helpers';
 
-export default function Toolbar({ onExport, onImport, onReset, onUndo, onRedo, canUndo, canRedo, darkMode, onToggleDark }) {
+export default function Toolbar({ onExport, onImport, onReset, onUndo, onRedo, canUndo, canRedo, darkMode, onToggleDark, user, onSignOut }) {
   const fileRef = useRef(null);
 
   const handleImport = async (e) => {
@@ -42,6 +42,15 @@ export default function Toolbar({ onExport, onImport, onReset, onUndo, onRedo, c
         <button className="toolbar-btn icon-btn" onClick={onToggleDark} title="Toggle dark mode">
           {darkMode ? '\u2600' : '\u263E'}
         </button>
+        {user && (
+          <div className="toolbar-user">
+            <div className="toolbar-avatar">
+              {user.email?.charAt(0).toUpperCase() || '?'}
+            </div>
+            <span className="toolbar-email">{user.email}</span>
+            <button className="toolbar-btn" onClick={onSignOut}>Sign out</button>
+          </div>
+        )}
       </div>
     </div>
   );
