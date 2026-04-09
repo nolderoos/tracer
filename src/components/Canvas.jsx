@@ -28,7 +28,6 @@ export default function Canvas({
   onEdgesChange,
   onSelectionChange,
   onSave,
-  setNodes,
   setEdges,
 }) {
   const nodeTypes = useMemo(
